@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.VseBankirf" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/brand</item>
+        <item name="colorPrimaryDark">@color/brand_dark</item>
+        <item name="android:statusBarColor">@color/brand</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <!-- Тема для стартового экрана: показываем логотип, пока WebView грузит страницу -->
+    <style name="Theme.VseBankirf.Splash">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+        <item name="android:statusBarColor">@color/splash_bg</item>
+    </style>
+</resources>

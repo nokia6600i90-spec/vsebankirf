@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Все Банки РФ</string>
+    <string name="site_url">https://vsebankirf.ru/</string>
+    <string name="offline_title">Нет подключения к интернету</string>
+    <string name="offline_retry">Повторить</string>
+</resources>
