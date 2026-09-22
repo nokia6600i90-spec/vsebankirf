@@ -27,7 +27,9 @@ android {
             }
         }
         debug {
-            applicationIdSuffix ".debug"
+                        if (System.getenv("VB_KEYSTORE_PATH")) {
+                signingConfig signingConfigs.release
+                        }
         }
     }
 
