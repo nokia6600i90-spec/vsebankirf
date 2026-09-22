@@ -24,7 +24,28 @@ jobs:
         with:
           gradle-version: 8.9
 
-      - name: Build debug APK
+      - name: Download Russian Trusted CA certificates
+        run: |
+          mkdir -p app/src/main/res/raw
+          curl -sSL -o app/src/main/res/raw/russian_trusted_root_ca.pem https://raw.githubusercontent.com/koenrh/russian-trusted-root-ca/main/root-ca_rsa-2022.pem
+          curl -sSL -o app/src/main/res/raw/russian_trusted_sub_ca.pem https://raw.githubusercontent.com/koenrh/russian-trusted-root-ca/main/sub-ca_rsa-2022.pem
+
+      - name: Decode keystore (if configured)
+        if: env.HAS_KEYSTORE == 'true'
+        run: |
+          echo "${{ secrets.VB_KEYSTORE_B64 }}" | base64 -d > $RUNNER_TEMP/release.keystore
+
+      - name: Build debug APK (signed)
+        if: env.HAS_KEYSTORE == 'true'
+        env:
+          VB_KEYSTORE_PATH: ${{ runner.temp }}/release.keystore
+          VB_KEYSTORE_PASSWORD: ${{ secrets.VB_KEYSTORE_PASSWORD }}
+          VB_KEY_ALIAS: ${{ secrets.VB_KEY_ALIAS }}
+          VB_KEY_PASSWORD: ${{ secrets.VB_KEY_PASSWORD }}
+        run: gradle assembleDebug --no-daemon
+
+      - name: Build debug APK (unsigned)
+        if: env.HAS_KEYSTORE != 'true'
         run: gradle assembleDebug --no-daemon
 
       - name: Upload debug APK
@@ -32,11 +53,6 @@ jobs:
         with:
           name: vsebankirf-debug-apk
           path: app/build/outputs/apk/debug/*.apk
-
-      - name: Decode keystore (if configured)
-        if: env.HAS_KEYSTORE == 'true'
-        run: |
-          echo "${{ secrets.VB_KEYSTORE_B64 }}" | base64 -d > $RUNNER_TEMP/release.keystore
 
       - name: Build signed release AAB (if configured)
         if: env.HAS_KEYSTORE == 'true'
